@@ -24,15 +24,18 @@ jobs:
       # 3. Install dependencies
       - name: Install dependencies
         run: |
+          cd Eployees_Attandance_Portal
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       # 4. Run Django system checks
       - name: Run Django system checks
         run: |
+          cd Eployees_Attandance_Portal
           python manage.py check
 
-      # 5. Run tests (optional, if you have test cases)
+      # 5. Run Django tests
       - name: Run Django tests
         run: |
+          cd Eployees_Attandance_Portal
           python manage.py test
