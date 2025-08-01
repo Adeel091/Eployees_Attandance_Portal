@@ -2,7 +2,7 @@ name: Django CI/CD Pipeline
 
 on:
   push:
-    branches: [main]   # Run on push to main
+    branches: [main]
 
 jobs:
   build-and-deploy:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Setup Python
+      # 2. Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -25,12 +25,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4. Run Django tests (optional if you have)
-      - name: Run Django tests
+      # 4. Run Django system checks (optional)
+      - name: Run Django system checks
         run: |
           python manage.py check
 
-      # 5. Deploy to EC2 via SSH
+      # 5. Deploy to EC2
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -41,7 +41,8 @@ jobs:
             cd /home/ubuntu/Eployees_Attandance_Portal || git clone https://github.com/Adeel091/Eployees_Attandance_Portal.git
             cd Eployees_Attandance_Portal
             git pull origin main
-            source venv/bin/activate || python3 -m venv venv && source venv/bin/activate
+            python3 -m venv venv
+            source venv/bin/activate
             pip install -r requirements.txt
             python manage.py migrate
             python manage.py collectstatic --noinput
