@@ -1,11 +1,13 @@
-name: Django CI/CD Pipeline
+name: Django CI Pipeline
 
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  build-and-deploy:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,25 +27,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4. Run Django system checks (optional)
+      # 4. Run Django system checks
       - name: Run Django system checks
         run: |
           python manage.py check
 
-      # 5. Deploy to EC2
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-          script: |
-            cd /home/ubuntu/Eployees_Attandance_Portal || git clone https://github.com/Adeel091/Eployees_Attandance_Portal.git
-            cd Eployees_Attandance_Portal
-            git pull origin main
-            python3 -m venv venv
-            source venv/bin/activate
-            pip install -r requirements.txt
-            python manage.py migrate
-            python manage.py collectstatic --noinput
-            sudo systemctl restart gunicorn
+      # 5. Run tests (optional, if you have test cases)
+      - name: Run Django tests
+        run: |
+          python manage.py test
